@@ -26,7 +26,7 @@ function createEvent(event: AdaptedEvent) {
   })
 }
 
-function getEvents(event: Event) {
+function getEvents(): Promise<Event[]> {
   return new Promise((resolve) => {
     setTimeout(() => {
       const localEvents = localStorage.getItem("events")

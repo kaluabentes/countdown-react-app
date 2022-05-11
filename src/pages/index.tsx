@@ -1,6 +1,8 @@
 import AddModal from "@/components/AddModal"
 import Countdown from "@/components/Countdown"
 import useCreateEvent from "@/hooks/events/useCreateEvent"
+import useGetEvents from "@/hooks/events/useGetEvents"
+import { Event } from "@/models/events"
 import {
   Container,
   Heading,
@@ -13,16 +15,53 @@ import {
   Flex,
   Button,
   useDisclosure,
+  Spinner,
+  Box,
 } from "@chakra-ui/react"
+import { useEffect } from "react"
 
 export default function Home() {
   const { isOpen, onClose, onOpen } = useDisclosure()
   const { createEvent, isCreatingEvent } = useCreateEvent(() => {
     onClose()
   })
+  const { getEvents, events, isLoadingEvents } = useGetEvents()
+
+  useEffect(() => {
+    getEvents()
+  }, [getEvents])
+
+  function renderEvents(eventsList: Event[]) {
+    if (!eventsList.length) {
+      return <Box>Não há eventos criados</Box>
+    }
+
+    return (
+      <Table>
+        <Thead>
+          <Tr>
+            <Th>Título</Th>
+            <Th>Description</Th>
+            <Th width="1%">Contagem</Th>
+          </Tr>
+        </Thead>
+        <Tbody>
+          {eventsList.map((event) => (
+            <Tr key={event.id}>
+              <Td>{event.title}</Td>
+              <Td>{event.description}</Td>
+              <Td>
+                <Countdown timestampMs={new Date(event.date).getTime()} />
+              </Td>
+            </Tr>
+          ))}
+        </Tbody>
+      </Table>
+    )
+  }
 
   return (
-    <Container pt={10} pb={10}>
+    <Container maxW="container.lg" pt={10} pb={10}>
       <Flex justifyContent="space-between" alignItems="flex-start">
         <Heading as="h1" mb={10}>
           Countdown
@@ -31,24 +70,13 @@ export default function Home() {
           Adicionar
         </Button>
       </Flex>
-      <Table>
-        <Thead>
-          <Tr>
-            <Th>Título</Th>
-            <Th width="1%">Contagem</Th>
-          </Tr>
-        </Thead>
-        <Tbody>
-          <Tr>
-            <Td>Aula gratuita</Td>
-            <Td>
-              <Countdown
-                timestampMs={new Date("December 29, 2022 05:00:00").getTime()}
-              />
-            </Td>
-          </Tr>
-        </Tbody>
-      </Table>
+      {isLoadingEvents ? (
+        <Flex justifyContent="center" height="100" alignItems="center">
+          <Spinner />
+        </Flex>
+      ) : (
+        renderEvents(events)
+      )}
       <AddModal
         onSubmit={createEvent}
         isOpen={isOpen}
