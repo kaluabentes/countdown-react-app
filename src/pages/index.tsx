@@ -1,8 +1,9 @@
 import AddModal from "@/components/AddModal"
 import Countdown from "@/components/Countdown"
 import useCreateEvent from "@/hooks/events/useCreateEvent"
+import useDeleteEvent from "@/hooks/events/useDeleteEvent"
 import useGetEvents from "@/hooks/events/useGetEvents"
-import { Event } from "@/models/events"
+import { Event, FormEvent } from "@/models/events"
 import {
   Container,
   Heading,
@@ -26,10 +27,21 @@ export default function Home() {
     onClose()
   })
   const { getEvents, events, isLoadingEvents } = useGetEvents()
+  const { deleteEvent, isDeletingEvent } = useDeleteEvent()
 
   useEffect(() => {
     getEvents()
   }, [getEvents])
+
+  function handleDelete(eventId: number) {
+    deleteEvent(eventId)
+    getEvents()
+  }
+
+  async function handleCreate(values: FormEvent) {
+    await createEvent(values)
+    getEvents()
+  }
 
   function renderEvents(eventsList: Event[]) {
     if (!eventsList.length) {
@@ -43,6 +55,7 @@ export default function Home() {
             <Th>Título</Th>
             <Th>Description</Th>
             <Th width="1%">Contagem</Th>
+            <Th width="1%">Ações</Th>
           </Tr>
         </Thead>
         <Tbody>
@@ -52,6 +65,9 @@ export default function Home() {
               <Td>{event.description}</Td>
               <Td>
                 <Countdown timestampMs={new Date(event.date).getTime()} />
+              </Td>
+              <Td>
+                <Button onClick={() => handleDelete(event.id)}>Excluir</Button>
               </Td>
             </Tr>
           ))}
@@ -70,7 +86,7 @@ export default function Home() {
           Adicionar
         </Button>
       </Flex>
-      {isLoadingEvents ? (
+      {isLoadingEvents || isDeletingEvent ? (
         <Flex justifyContent="center" height="100" alignItems="center">
           <Spinner />
         </Flex>
@@ -78,7 +94,7 @@ export default function Home() {
         renderEvents(events)
       )}
       <AddModal
-        onSubmit={createEvent}
+        onSubmit={handleCreate}
         isOpen={isOpen}
         isCreating={isCreatingEvent}
         onClose={onClose}
