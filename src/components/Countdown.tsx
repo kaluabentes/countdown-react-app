@@ -1,5 +1,5 @@
 import useCountdown from "@/hooks/useCountdown"
-import { Flex } from "@chakra-ui/react"
+import { Flex, Spinner } from "@chakra-ui/react"
 import TimeBox from "./TimeBox"
 
 interface CountdownProps {
@@ -7,7 +7,12 @@ interface CountdownProps {
 }
 
 export default function Countdown({ timestampMs }: CountdownProps) {
-  const { seconds, minutes, hours, days } = useCountdown(timestampMs)
+  const { remainingTime, isLoading } = useCountdown(timestampMs)
+  const { seconds, minutes, hours, days } = remainingTime
+
+  if (isLoading) {
+    return <Spinner />
+  }
 
   return (
     <Flex gap={1}>

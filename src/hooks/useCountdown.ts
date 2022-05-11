@@ -12,10 +12,12 @@ const INITIAL_STATE = {
 
 export default function useCountdown(countdown: number) {
   const [remainingTime, setRemainingTime] = useState(INITIAL_STATE)
+  const [isLoading, setIsLoading] = useState(true)
 
   useEffect(() => {
     const intervalId = setInterval(() => {
       updateRemainingTime(countdown)
+      setIsLoading(false)
     }, DURATION)
 
     return () => {
@@ -27,5 +29,5 @@ export default function useCountdown(countdown: number) {
     setRemainingTime(getRemainingTime(countdownMs))
   }
 
-  return remainingTime
+  return { remainingTime, isLoading }
 }
