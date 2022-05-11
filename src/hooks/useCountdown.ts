@@ -10,23 +10,23 @@ const INITIAL_STATE = {
   days: "00",
 }
 
-export default function useCountdown(countdown: number) {
+export default function useCountdown(finalDate: number) {
   const [remainingTime, setRemainingTime] = useState(INITIAL_STATE)
   const [isLoading, setIsLoading] = useState(true)
 
   useEffect(() => {
     const intervalId = setInterval(() => {
-      updateRemainingTime(countdown)
+      updateRemainingTime(finalDate)
       setIsLoading(false)
     }, DURATION)
 
     return () => {
       clearInterval(intervalId)
     }
-  }, [countdown])
+  }, [finalDate])
 
-  function updateRemainingTime(countdownMs: number) {
-    setRemainingTime(getRemainingTime(countdownMs))
+  function updateRemainingTime(finalDateMs: number) {
+    setRemainingTime(getRemainingTime(finalDateMs))
   }
 
   return { remainingTime, isLoading }

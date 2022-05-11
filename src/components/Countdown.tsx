@@ -3,11 +3,14 @@ import { Flex, Spinner } from "@chakra-ui/react"
 import TimeBox from "./TimeBox"
 
 interface CountdownProps {
-  timestampMs: number
+  /**
+   * The final date in epoch timestamp
+   */
+  finalDate: number
 }
 
-export default function Countdown({ timestampMs }: CountdownProps) {
-  const { remainingTime, isLoading } = useCountdown(timestampMs)
+export default function Countdown({ finalDate }: CountdownProps) {
+  const { remainingTime, isLoading } = useCountdown(finalDate)
   const { seconds, minutes, hours, days } = remainingTime
 
   if (isLoading) {

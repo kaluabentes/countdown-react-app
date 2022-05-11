@@ -24,7 +24,7 @@ export default function EventsTable({ events, onDelete }: EventsTableProps) {
             <Td>{event.title}</Td>
             <Td>{event.description}</Td>
             <Td>
-              <Countdown timestampMs={new Date(event.date).getTime()} />
+              <Countdown finalDate={new Date(event.date).getTime()} />
             </Td>
             <Td>
               <Button onClick={() => onDelete(event.id)}>Excluir</Button>
