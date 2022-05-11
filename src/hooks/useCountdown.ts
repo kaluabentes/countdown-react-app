@@ -3,7 +3,7 @@ import getRemainingTime from "@/utils/getRemainingTime"
 
 const DURATION = 1000
 
-const INITIAL_STATE = {
+export const COUNTDOWN_INITIAL_STATE = {
   seconds: "00",
   minutes: "00",
   hours: "00",
@@ -11,7 +11,7 @@ const INITIAL_STATE = {
 }
 
 export default function useCountdown(finalDate: number) {
-  const [remainingTime, setRemainingTime] = useState(INITIAL_STATE)
+  const [remainingTime, setRemainingTime] = useState(COUNTDOWN_INITIAL_STATE)
   const [isLoading, setIsLoading] = useState(true)
 
   useEffect(() => {

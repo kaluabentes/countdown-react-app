@@ -1,9 +1,14 @@
+import { COUNTDOWN_INITIAL_STATE } from "@/hooks/useCountdown"
 import dayjs, { Dayjs } from "dayjs"
 import padZeros from "./padZeros"
 
 export default function getRemainingTime(finalMs: number) {
   const finalDayJs = dayjs(finalMs)
   const nowDayJs = dayjs()
+
+  if (finalDayJs.isBefore(nowDayJs)) {
+    return COUNTDOWN_INITIAL_STATE
+  }
 
   return {
     seconds: getSeconds(nowDayJs, finalDayJs),
